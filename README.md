@@ -1,8 +1,10 @@
 # Operational Intelligence Platform
 
+> **Cubiczan stack** — [Profile](https://github.com/Cubiczan) · [agent-conductor](https://github.com/Cubiczan/agent-conductor) · **You are here:** `operational-intelligence`
+
 Rust-native multi-agent platform that maps live business data to strategic initiatives and ROI outcomes — with evidence-traced reasoning, MCP-style tools, and human-in-the-loop approval.
 
-Built by [Cubiczan](https://codeberg.org/cubiczan). Composes patterns from enterprise OI (Lemmata-style), agentic content crews, and evidence-first hiring transcript analysis.
+Built by [Cubiczan](https://github.com/Cubiczan). Composes patterns from enterprise OI (Lemmata-style), agentic content crews, and evidence-first hiring transcript analysis.
 
 ## Three workflow modes
 
@@ -84,6 +86,15 @@ cargo build --release -p oi-cli
 | `oi-connector` | Analytics data model connector (mock Qlik-style) |
 | `oi-api` | Axum REST API |
 | `oi-cli` | `oi` command-line interface |
+
+---
+
+## Cubiczan stack
+
+| Platform | [cubiczan-mcp-server](https://github.com/Cubiczan/cubiczan-mcp-server) · [agent-conductor](https://github.com/Cubiczan/agent-conductor) · **operational-intelligence** · [software-factory](https://github.com/Cubiczan/software-factory) |
+| Governance | [consensus-hardening-protocol](https://github.com/Cubiczan/consensus-hardening-protocol) · [compliance-as-code-agent](https://github.com/Cubiczan/compliance-as-code-agent) |
+
+Evidence-traced crews for content and hiring — same audit patterns as [meshcfo](https://github.com/Cubiczan/meshcfo) board outputs.
 
 ## License
 
