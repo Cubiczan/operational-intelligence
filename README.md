@@ -51,6 +51,29 @@ cargo build --release -p oi-cli
 ./target/release/oi serve
 ```
 
+## Tech Economist integration (token cost accounting)
+
+When [tech-economist](https://github.com/Cubiczan/compliance-as-code-agent/tree/main/tech-economist) is running, every LLM call is reported to `/api/usage-ingest`:
+
+```bash
+# Terminal 1 — Tech Economist API
+cd ../compliance-as-code-agent/tech-economist/backend
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+uvicorn app.main:app --port 8000
+# Note "Operational Intelligence Crew" workflow id from startup log
+
+# Terminal 2 — OI crew with cost reporting
+export OI_TECH_ECONOMIST_URL=http://localhost:8000
+export OI_TECH_ECONOMIST_WORKFLOW_ID=9   # use actual id
+cargo run -p oi-cli -- crew "operational intelligence trends 2026"
+
+# Terminal 3 — session cost (use workflow id from crew JSON output)
+curl http://localhost:8000/api/sessions/<workflow-uuid>/cost | jq
+```
+
+Requires `oi-usage` crate (`MeteredLlm` wraps `MockLlm` or HTTP LLM). If env vars are unset, OI runs offline with no reporting.
+
 ## API endpoints
 
 | Method | Path | Description |
@@ -77,7 +100,8 @@ cargo build --release -p oi-cli
 | Crate | Purpose |
 |-------|---------|
 | `oi-core` | Evidence, initiatives, ROI, workflow state, audit |
-| `oi-llm` | LLM provider trait (mock + HTTP) |
+| `oi-llm` | LLM provider trait — `LlmCompletion` + `TokenUsage` (mock + HTTP) |
+| `oi-usage` | Tech Economist `usage-ingest` client + `MeteredLlm` wrapper |
 | `oi-tools` | MCP-style tool registry |
 | `oi-memory` | Persistent workflow + trace store |
 | `oi-eval` | Faithfulness / hallucination evaluation |

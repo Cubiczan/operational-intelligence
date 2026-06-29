@@ -37,8 +37,10 @@ pub async fn run_research(
                 ),
             }],
             temperature: 0.2,
+            agent_id: Some("research-agent".into()),
         })
-        .await?;
+        .await?
+        .content;
 
     let claim = Claim::new(
         summary,
@@ -66,8 +68,10 @@ pub async fn run_analyst(
             content: format!("Topic: {topic}\nInsights:\n{insights}\n\nProduce a structured outline."),
         }],
         temperature: 0.3,
+        agent_id: Some("analyst-agent".into()),
     })
     .await
+    .map(|c| c.content)
 }
 
 pub async fn run_writer(outline: &str, llm: &dyn LlmProvider) -> Result<String, oi_llm::LlmError> {
@@ -78,8 +82,10 @@ pub async fn run_writer(outline: &str, llm: &dyn LlmProvider) -> Result<String, 
             content: format!("Write article from outline:\n{outline}"),
         }],
         temperature: 0.5,
+        agent_id: Some("writer-agent".into()),
     })
     .await
+    .map(|c| c.content)
 }
 
 pub async fn run_editor(
@@ -108,8 +114,10 @@ pub async fn run_editor(
                 content: format!("Edit and finalize:\n{draft}"),
             }],
             temperature: 0.2,
+            agent_id: Some("editor-agent".into()),
         })
-        .await?;
+        .await?
+        .content;
 
     let claim = Claim::new(
         "Editor-verified final article".to_string(),

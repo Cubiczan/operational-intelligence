@@ -853,6 +853,7 @@ dependencies = [
  "oi-hiring",
  "oi-llm",
  "oi-memory",
+ "oi-usage",
  "serde",
  "serde_json",
  "tokio",
@@ -874,6 +875,7 @@ dependencies = [
  "oi-hiring",
  "oi-llm",
  "oi-memory",
+ "oi-usage",
  "serde_json",
  "tokio",
  "tracing-subscriber",
@@ -978,6 +980,19 @@ dependencies = [
  "serde",
  "serde_json",
  "thiserror",
+]
+
+[[package]]
+name = "oi-usage"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "oi-llm",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "thiserror",
+ "tracing",
 ]
 
 [[package]]

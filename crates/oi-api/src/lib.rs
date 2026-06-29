@@ -10,8 +10,8 @@ use oi_core::{
 };
 use oi_crew::{ContentCrewConfig, ContentCrewOrchestrator};
 use oi_hiring::HiringAnalyzer;
-use oi_llm::MockLlm;
 use oi_memory::SharedStore;
+use oi_usage::build_metered_llm;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tower_http::cors::CorsLayer;
@@ -99,7 +99,7 @@ async fn start_crew(
     Json(req): Json<StartCrewRequest>,
 ) -> Result<Json<serde_json::Value>, StatusCode> {
     let workflow = WorkflowRecord::new(WorkflowKind::ContentCrew, req.topic);
-    let llm = Arc::new(MockLlm);
+    let llm = build_metered_llm(workflow.id.to_string());
     let orchestrator = ContentCrewOrchestrator::new(
         llm,
         state.store.clone(),
@@ -121,7 +121,7 @@ async fn start_hiring(
 ) -> Result<Json<serde_json::Value>, StatusCode> {
     let workflow = WorkflowRecord::new(WorkflowKind::HiringAnalysis, "interview-transcript");
     let lines = HiringAnalyzer::parse_transcript(&req.transcript);
-    let llm = Arc::new(MockLlm);
+    let llm = build_metered_llm(workflow.id.to_string());
     let analyzer = HiringAnalyzer::new(llm, state.store.clone(), state.signing_key.clone());
     let assessment = analyzer
         .analyze(workflow, &lines)

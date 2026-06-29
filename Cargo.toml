@@ -8,6 +8,7 @@ members = [
     "crates/oi-crew",
     "crates/oi-hiring",
     "crates/oi-connector",
+    "crates/oi-usage",
     "crates/oi-api",
     "crates/oi-cli",
 ]
@@ -30,6 +31,7 @@ oi-eval = { path = "crates/oi-eval" }
 oi-crew = { path = "crates/oi-crew" }
 oi-hiring = { path = "crates/oi-hiring" }
 oi-connector = { path = "crates/oi-connector" }
+oi-usage = { path = "crates/oi-usage" }
 oi-api = { path = "crates/oi-api" }
 anyhow = "1.0"
 async-trait = "0.1"

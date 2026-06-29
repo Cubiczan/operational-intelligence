@@ -5,8 +5,8 @@ use oi_connector::{DataConnector, MockAnalyticsConnector, OperationalQuery};
 use oi_core::{WorkflowKind, WorkflowRecord};
 use oi_crew::{ContentCrewConfig, ContentCrewOrchestrator};
 use oi_hiring::HiringAnalyzer;
-use oi_llm::MockLlm;
 use oi_memory::{default_store_dir, SharedStore, WorkflowStore};
+use oi_usage::build_metered_llm;
 use std::path::PathBuf;
 use std::sync::Arc;
 
@@ -66,8 +66,9 @@ fn main() -> Result<()> {
         }
         Commands::Crew { topic, no_approval } => {
             let workflow = WorkflowRecord::new(WorkflowKind::ContentCrew, topic);
+            let llm = build_metered_llm(workflow.id.to_string());
             let orchestrator = ContentCrewOrchestrator::new(
-                Arc::new(MockLlm),
+                llm,
                 store,
                 ContentCrewConfig {
                     require_approval: !no_approval,
@@ -81,7 +82,8 @@ fn main() -> Result<()> {
             let content = std::fs::read_to_string(&file)?;
             let lines = HiringAnalyzer::parse_transcript(&content);
             let workflow = WorkflowRecord::new(WorkflowKind::HiringAnalysis, file.display().to_string());
-            let analyzer = HiringAnalyzer::new(Arc::new(MockLlm), store, cli.signing_key);
+            let llm = build_metered_llm(workflow.id.to_string());
+            let analyzer = HiringAnalyzer::new(llm, store, cli.signing_key);
             let assessment = tokio::runtime::Runtime::new()?
                 .block_on(analyzer.analyze(workflow, &lines))?;
             println!("{}", serde_json::to_string_pretty(&assessment)?);

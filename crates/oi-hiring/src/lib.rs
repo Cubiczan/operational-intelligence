@@ -122,22 +122,24 @@ impl HiringAnalyzer {
                     content: format!("Analyze interview transcript:\n{transcript_text}"),
                 }],
                 temperature: 0.2,
+                agent_id: Some("hiring-assessor".into()),
             })
             .await?;
 
+        let assessment_text = assessment_raw.content.clone();
         let (strengths, risks, cited_lines) =
-            self.extract_findings(transcript, &assessment_raw);
+            self.extract_findings(transcript, &assessment_text);
 
         let patterns = self.detect_patterns(transcript);
         let eval = self.eval.evaluate_transcript_assessment(
-            &assessment_raw,
+            &assessment_text,
             &cited_lines,
             transcript.len() as u32,
         );
 
         let assessment = TranscriptAssessment {
             workflow_id: workflow.id,
-            candidate_summary: assessment_raw.clone(),
+            candidate_summary: assessment_text.clone(),
             strengths,
             risks,
             patterns,
@@ -166,7 +168,7 @@ impl HiringAnalyzer {
             id: uuid::Uuid::new_v4(),
             label: "Hiring decision review".into(),
             status: ApprovalStatus::Pending,
-            artifact_preview: assessment_raw.chars().take(400).collect(),
+            artifact_preview: assessment_text.chars().take(400).collect(),
             reviewer_notes: None,
         });
         workflow.state.completed_agents = vec![

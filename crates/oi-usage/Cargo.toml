@@ -1,0 +1,17 @@
+[package]
+name = "oi-usage"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Tech Economist usage-ingest client for operational-intelligence"
+
+[dependencies]
+oi-llm = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
